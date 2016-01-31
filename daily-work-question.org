@@ -1,0 +1,53 @@
+* daily-word-question.org
+**<2016-01-30 Sat 10:51>
+note the solutions of goole questions:
+
+
+SELECT * FROM table_name WHERE string LIKE pattern;
+result = table.objects.filter(string__contains='pattern')
+
+Sample.objects.filter(date__range=["2011-01-01", "2011-01-31"])
+
+sql date 型的变量要加'', like '2015-12-04'
+
+source_tree 重置就是丢弃到修改
+
+在 ORM 里写的是 model 类里的属性名，
+
+model.values('..') 结果会是一个[{'..':..}..]不同于 sql 里的 groupby,不会
+自动合并取唯一，需要再 distinct()一下，
+
+python 里的基础：if..else.. 和 if..elif..的区别。
+
+搞清楚如何从一个[{..}]的结构里分页，使用频率会很高
+
+看外键关系，若可以为空，则需要加判断，若不为空，则不需要
+
+ 饼状图要数据就好，比例图会自己绘制
+
+ model 里写的方法，只要返回 row 里的数据，其它的 success，page 信息调用 EasyUI 来做
+
+ 合并两个字典，dict1.update(dict2), dict1 变成 dict1 与 dict2 的合并
+
+
+计算公式里把 int 变成 float,可简单的* 1.0 即可
+
+对列表按照列表的元素里元素排序方法，
+a = [{1:'a', 2:'b'},{1:'c',2:'d'}]
+sorted(a, key=lambda x:x[1] reverse=..)
+
+呈现给用户看的信息，尽量不要是和系统错误有关的
+
+当前端页面不显示，或者登录不上等情况时，跑一遍 init_database.py 的 init 脚本部分
+
+当反复登录都登录不上时，manage.py clearsessions,再运行
+
+能用 return 就用 return,明确程度的出口是什么
+
+记住.extra()后的结果依然是[<Model Object>...]形式,
+.extra({..}),参数只能有一个{}，多个数据写里面
+
+.extra
+.annotate 要分清
+* <2016-01-30 Sat 15:11>
+- sql 如何取得日期中的月/年？year(date), month(date)
