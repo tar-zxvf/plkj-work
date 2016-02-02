@@ -1,0 +1,74 @@
+select name, effective, (total - effective) as useless
+from
+(select father_city_id, count(if(quantity>3, 1, null)) as effective, count(customer_id) as total 
+from (
+select father_city_id, customer_id, sum(if(order_time >= '2015-1-17', quantity, 0)) as quantity 
+from supply_devicesaledetail where order_time >= '2015-06-20' group by father_city_id, customer_id
+) as tmp_a 
+group by father_city_id 
+)as tmp_b
+left join supply_city on tmp_b.father_city_id = supply_city.id
+
+
+select name, effective, (total - effective) as useless from (select father_city_id, count(if(quantity>3, 1, null)) as effective, count(customer_id) as total
+from ( select father_city_id, customer_id, sum(if(order_time >= '2015-01-17', quantity, 0)) as quantity
+from supply_devicesaledetail where order_time >= '2015-06-20' group by father_city_id, customer_id
+) as tmp_a group by father_city_id) as tmp_b left join supply_city on tmp_b.father_city_id = supply_city.id
+
+select father_city_id, count(`customer_id`)
+from supply_devicesaledetail 
+where order_time between '2015-01-01' and '2016-01-25' and supplier_id = 2
+group by father_city_id
+
+create table test_a
+select cityID, name,activateNum from(
+select cityID,count(`imeiNo`) as activateNum
+from source_imeiordercust
+where date_add((select max(activateTime) from source_imeiordercust), interval -1 day) = activateTime and cityID is not null
+group by cityID
+)as a 
+left join supply_city on a.cityID = supply_city.id
+
+create table source_imeiordercust_groupby_cityID_activateTime
+select cityID, name as cityName, `activateTime`, activateNum 
+from (
+select cityID, `activateTime`, count(`imeiNo`) as activateNum
+from source_imeiordercust
+where cityID is not null and `activateTime` is not null
+group by cityID, `activateTime`
+) as a
+left join supply_city on a.cityID = supply_city.id
+
+select cityName, sum(activateNum) as activateNum
+from source_imeiordercust_groupby_cityID_activateTime
+where date_add((select max(activateTime) from source_imeiordercust_groupby_cityID_activateTime), interval -1 DAY) = activateTime
+group by cityName
+
+select max(orderTime)
+from source_flow
+
+select name as city_name, price_range, society_num, group_num, total_num
+from (
+select city_id, price_range, sum(society_sale_num) as society_num, sum(group_sale_num) as group_num, sum(total_sale_num) as total_num
+from source_flow_groupby_city_and_price_range
+where order_time between '2015-12-01' and '2015-12-20'
+group by city_id, price_range
+) as a
+left join supply_city on a.city_id = supply_city.id
+
+insert into source_flow_groupby_city_and_price_range
+select city_id,
+case
+when product_price <= 300 then 0
+when product_price > 300 and product_price <= 700 then 1
+when product_price > 700 and product_price <= 1200 then 2
+when product_price > 1200 and product_price <= 3000 then 3
+when product_price > 3000 then 4
+end as price_range,
+sum(if(supplier_id = 2, `sale_volume`, 0)) as society_sale_num, sum(if(supplier_id != 2, `sale_volume`, 0)) as group_sale_num, sum(`sale_volume`) as total_sale_num,  order_time
+from source_FlowGroup
+where city_id > 0
+group by city_id, order_time
+
+
+select name from supply_city group by father_id order by father_id

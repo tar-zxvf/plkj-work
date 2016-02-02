@@ -23,3 +23,4 @@
 ** 其它 MAC 上的好用软件
 - dash + alfred
 - xtraFinder?
+- item2 + tmux, 可以协作
